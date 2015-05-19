@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 #define MEMORY_SIZE  4096
 #define STACK_SIZE 16
@@ -38,7 +37,6 @@ int main(int argc, char *argv[]) {
 	
 	reset(&machine);
 	load_rom(&machine, "./roms/PONG.ch8");
-	printf("%x - %x", machine.mem[0x200 + 0xf4], machine.mem[0x200 + 0xf45]);
 	machine.running = 1;
 	while(machine.running) {
 		if (machine.registers.pc >= MEMORY_SIZE)
@@ -46,8 +44,13 @@ int main(int argc, char *argv[]) {
 		else
 		{
 			uint16_t opcode = (machine.mem[machine.registers.pc] << 8) | (machine.mem[++machine.registers.pc]);
-			printf("%x - %x\n ", machine.registers.pc, opcode);
+			printf("%x", opcode);
 			machine.registers.pc++;
+			uint16_t nnn = opcode & 0xfff;
+			uint8_t kk = opcode & 0xff;
+			uint8_t n = opcode & 0xf;
+			uint8_t x = (opcode >> 8) & 0xf;
+			uint8_t y = (opcode >> 4) & 0xf;
 		}
 	}
 	
@@ -71,7 +74,9 @@ void reset(struct machine_t *machine) {
 		machine->registers.v[i] = 0x00;
 	}
 	
-	machine->registers.pc = 0x200;
+
+	//machine->registers.pc = 0x200;
+	machine->registers.pc = 0x00;
 	machine->registers.sp = 0x0f;
 	machine->registers.i = 0x0000;
 	machine->registers.st = 0x00;
@@ -90,9 +95,11 @@ void load_rom(struct machine_t *machine, char *path) {
 	fseek(file_rom, 0, SEEK_END);
 	int length = ftell(file_rom);
 	fseek(file_rom, 0, SEEK_SET);
+
+	printf("Longitud del archivo: %d\n", length);
 	
-	fread(machine->mem + 0x200, length, 1, file_rom);
-	
+	fread(machine->mem, 4096, 1, file_rom); 
+
 	fclose(file_rom);
 	
 }
