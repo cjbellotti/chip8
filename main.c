@@ -51,6 +51,81 @@ int main(int argc, char *argv[]) {
 			uint8_t n = opcode & 0xf;
 			uint8_t x = (opcode >> 8) & 0xf;
 			uint8_t y = (opcode >> 4) & 0xf;
+			uint8_t op = (opcode >> 12);
+
+			switch (op)
+			{
+				case 0:
+
+					if (opcode == 0x00e0){
+						// TODO : CLS.
+					} else if (opcode == 0x00ee){
+						// TODO : RET
+					}
+		
+					break;
+
+				case 1:
+
+					// TODO : JP
+					break;
+
+				case 2:
+	
+					// TODO : CALL
+					break;
+
+				case 3:
+
+					// TODO : SE
+					break;
+
+				case 4:
+
+					// TODO : SNE
+
+					break;
+
+				case 5:
+
+					// TODO :SE
+					break;
+
+				case 6:
+
+					// TODO : LD
+					break;
+
+				case 7:
+
+					// TODO : ADD
+					break;
+
+				case 8:
+
+					if (n == 0) {
+						// TODO : LD Vx, Vy
+ 
+					} else if (n == 1) {
+						// TODO : OR Vx, Vy
+					} else if (n == 2) {
+						// TODO : AND Vx, Vy
+					} else if (n == 3) {
+						// TODO : XOR Vx, Vy
+					} else if (n == 4) {
+						// TODO : ADD Vx, Vy
+					} else if (n == 5) {
+						// TODO : SUB Vx, Vy
+					} else if (n == 6) {
+						// TODO : SHR Vx
+					} else if (n == 7) {
+						// TODO : SUBN Vx, Vy
+					} else if (n == 0xe) {
+						// TODO : SHL Vx
+					}
+					break;
+					 
+			}
 		}
 	}
 	
