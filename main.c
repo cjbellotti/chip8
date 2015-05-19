@@ -44,7 +44,6 @@ int main(int argc, char *argv[]) {
 		else
 		{
 			uint16_t opcode = (machine.mem[machine.registers.pc] << 8) | (machine.mem[++machine.registers.pc]);
-			printf("%x", opcode);
 			machine.registers.pc++;
 			uint16_t nnn = opcode & 0xfff;
 			uint8_t kk = opcode & 0xff;
@@ -58,73 +57,181 @@ int main(int argc, char *argv[]) {
 				case 0:
 
 					if (opcode == 0x00e0){
-						// TODO : CLS.
+
+						printf("CLS\n");	
+
 					} else if (opcode == 0x00ee){
-						// TODO : RET
-					}
+
+						printf("RET\n");	
+
+					} else {
+
+						//printf("SYS %x\n", nnn);
+
+					} 
 		
 					break;
 
 				case 1:
 
-					// TODO : JP
+					printf("JP %x\n", nnn);	
 					break;
 
 				case 2:
 	
-					// TODO : CALL
+					printf("CALL %x\n", nnn);	
 					break;
 
 				case 3:
 
-					// TODO : SE
+					printf("SE V%x, %x\n", x, kk);	
 					break;
 
 				case 4:
 
-					// TODO : SNE
-
+					printf("SNE V%x, %x\n", x, kk);	
 					break;
 
 				case 5:
-
-					// TODO :SE
+					
+					if (n == 0) {
+						printf("SE V%x, V%x\n", x, y);
+					}	
 					break;
 
 				case 6:
 
-					// TODO : LD
+					printf("LD V%x, %x\n", x, kk);	
 					break;
 
 				case 7:
 
-					// TODO : ADD
+					printf("ADD V%x, %x\n", x, kk);	
 					break;
 
 				case 8:
 
 					if (n == 0) {
-						// TODO : LD Vx, Vy
+
+						printf("LD V%x, V%x\n", x, y);
  
 					} else if (n == 1) {
-						// TODO : OR Vx, Vy
+
+						printf("OR V%x, V%x\n", x, y);
+
 					} else if (n == 2) {
-						// TODO : AND Vx, Vy
+
+						printf("AND V%x, V%x\n", x, y);
+
 					} else if (n == 3) {
-						// TODO : XOR Vx, Vy
+
+						printf("XOR V%x, V%x\n", x, y);
+
 					} else if (n == 4) {
-						// TODO : ADD Vx, Vy
+
+						printf("ADD V%x, V%x\n", x, y);
+
 					} else if (n == 5) {
-						// TODO : SUB Vx, Vy
+
+						printf("SUB V%x, V%x\n", x, y);
+
 					} else if (n == 6) {
-						// TODO : SHR Vx
+
+						printf("SHR V%x {, V%x}\n", x, y);
 					} else if (n == 7) {
-						// TODO : SUBN Vx, Vy
+
+						printf("SUBN V%x, V%x\n", x, y);
+
 					} else if (n == 0xe) {
-						// TODO : SHL Vx
+
+						printf("SHL V%x, {, V%x}\n", x, y);
 					}
 					break;
-					 
+
+				case 9:
+					
+					if (n == 0) {
+
+						printf("SNE V%x, V%x\n", x, y);
+
+					}
+					break;
+
+				case 0xa:
+
+					printf("LD I, %x\n", nnn);
+					break;
+
+				case 0xb:
+
+					printf("JP V0, %x\n", nnn);
+					break;
+
+				case 0xc:
+
+					printf("RND V%x, %x\n", x, kk);
+					break;
+
+				case 0xd:
+
+					printf("DRW V%x, V%x, %x\n", x, y, n);
+					break;
+
+				case 0xe:
+	
+					if (kk == 0x9e) {
+
+						printf("SKP V%x\n", x);
+
+					} else if (kk == 0xa1) {
+
+						printf("SKNP V%x\n", x);
+
+					}
+					break;
+
+				case 0xf:
+
+					if (kk == 0x07) {
+	
+						printf("LD V%x, DT\n", x);
+					
+					} else if (kk == 0x0a) {
+
+						printf("LD V%x, K\n", x);
+
+					} else if (kk == 0x15) {
+
+						printf("LD DT, V%x\n", x);
+
+					} else if (kk == 0x18) {
+
+						printf("LD ST, V%x\n", x);
+
+					} else if (kk == 0x1e) {
+
+						printf("ADD I, V%x\n", x);
+
+					} else if (kk == 0x29) {
+
+						printf("LD F, V%x\n", x);
+
+					} else if (kk == 0x33) {
+
+						printf("LD B, V%x\n", x);
+
+					} else if (kk == 0x55) {
+			
+						printf("LD [I], V%x\n", x);
+
+					} else if (kk == 0x65) {
+
+						printf("LD V%x, [I]\n", x);
+
+					}
+
+					break;
+ 
 			}
 		}
 	}
