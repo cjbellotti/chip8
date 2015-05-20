@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-
+#include "instructions.h"
 
 #define MEMORY_SIZE  4096
 #define STACK_SIZE 16
-
 
 struct registers_t {
 	
@@ -62,7 +61,8 @@ int main(int argc, char *argv[]) {
 
 					} else if (opcode == 0x00ee){
 
-						printf("RET\n");	
+						printf("RET\n");
+						RET;	
 
 					} else {
 
@@ -75,27 +75,32 @@ int main(int argc, char *argv[]) {
 				case 1:
 
 					printf("JP %x\n", nnn);	
+					JP(nnn);
 					break;
 
 				case 2:
 	
-					printf("CALL %x\n", nnn);	
+					printf("CALL %x\n", nnn);
+					CALL(nnn);	
 					break;
 
 				case 3:
 
-					printf("SE V%x, %x\n", x, kk);	
+					printf("SE V%x, %x\n", x, kk);
+					SE_Vx_byte(x, kk);
 					break;
 
 				case 4:
 
 					printf("SNE V%x, %x\n", x, kk);	
+					SNE_Vx_byte(x, kk);
 					break;
 
 				case 5:
 					
 					if (n == 0) {
 						printf("SE V%x, V%x\n", x, y);
+						SE_Vx_Vy(x, y);
 					}	
 					break;
 
@@ -138,6 +143,7 @@ int main(int argc, char *argv[]) {
 					} else if (n == 6) {
 
 						printf("SHR V%x {, V%x}\n", x, y);
+
 					} else if (n == 7) {
 
 						printf("SUBN V%x, V%x\n", x, y);
