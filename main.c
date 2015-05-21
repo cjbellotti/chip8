@@ -1,13 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <SDL2/SDL.h>
 #include "cpu.h"
 
 
 void reset(machine_t*);
 void load_rom(machine_t *, char*);
 
-int main(int argc, char *argv[]) {
+int main()
+{
+	SDL_Init(SDL_INIT_EVERYTHING);
+
+	SDL_Window *wnd = SDL_CreateWindow("CHIP-8 Emulator",
+										SDL_WINDOWPOS_CENTERED,
+										SDL_WINDOWPOS_CENTERED,
+										640,
+										320,
+										SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	SDL_Renderer *rnd = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
+
+	// TODO : Logica
+
+	SDL_DestroyRenderer(rnd);
+	SDL_DestroyRenderer(wnd);
+	SDL_Quit();
+	return 0;
+}
+/*int main(int argc, char *argv[]) {
 
 	machine_t machine;
 	
@@ -27,7 +47,7 @@ int main(int argc, char *argv[]) {
 	
 	return 0;
 
-}
+}*/
 
 void reset(machine_t *machine) {
 

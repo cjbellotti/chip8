@@ -2,20 +2,6 @@
 #include <stdint.h>
 #include "cpu.h"
 
-#define RET machine->registers.pc = machine->stack[machine->registers.sp]; machine->registers.sp--
-#define JP(addr) machine->registers.pc = addr
-#define CALL(addr) machine->registers.sp++; machine->stack[machine->registers.sp] = machine->registers.pc; machine->registers.pc = addr
-#define SE_Vx_byte(vx, byte) if (machine->registers.v[vx] == byte) machine->registers.pc+=2
-#define SNE_Vx_byte(vx, byte) if (machine->registers.v[vx] != byte) machine->registers.pc+=2
-#define SE_Vx_Vy(vx, vy) if (machine->registers.v[vx] == machine->registers.v[vy]) machine->registers.pc+=2
-#define LD_Vx_byte(vx, byte)  machine->registers.v[vx] = byte
-#define ADD_Vx_byte(vx, byte) machine->registers.v[vx] += byte
-#define LD_Vx_Vy(vx, vy) machine->registers.v[vx] = machine->registers.v[vy]
-#define OR_Vx_Vy(vx, vy) machine->registers.v[vx] |= machine->registers.v[vy]
-#define AND_Vx_Vy(vx, vy) machine->registers.v[vx] &= machine->registers.v[vy]
-#define XOR_Vx_Vy(vx, vy) machine->registers.v[vx] ^= machine->registers.v[vy]
-#define ADD_Vx_Vy(vx, vy) machine->registers.vf = ((machine->registers.v[vx] + machine->registers.v[vy]) & 0x100) ? 1 : 0;  machine->registers.v[vx] += machine->registers.v[vy]
-
 void exec_opcode(machine_t *machine, uint16_t opcode)
 {
 
@@ -116,22 +102,28 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			} else if (n == 4) {
 
 				printf("ADD V%x, V%x\n", x, y);
+				ADD_Vx_Vy(x, y);
 
 			} else if (n == 5) {
 
 				printf("SUB V%x, V%x\n", x, y);
+				SUB_Vx_Vy(x, y);
 
 			} else if (n == 6) {
 
 				printf("SHR V%x {, V%x}\n", x, y);
+				SHR_Vx(x);
 
 			} else if (n == 7) {
 
 				printf("SUBN V%x, V%x\n", x, y);
+				SUBN_Vx_Vy(x, y);
 
 			} else if (n == 0xe) {
 
 				printf("SHL V%x, {, V%x}\n", x, y);
+				SHL_Vx(x);
+
 			}
 			break;
 
@@ -140,6 +132,7 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			if (n == 0) {
 
 				printf("SNE V%x, V%x\n", x, y);
+				SNE_Vx_Vy(x, y);
 
 			}
 			break;
@@ -147,16 +140,19 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 		case 0xa:
 
 			printf("LD I, %x\n", nnn);
+			LD_I_addr(nnn);
 			break;
 
 		case 0xb:
 
 			printf("JP V0, %x\n", nnn);
+			JP_V0_addr(nnn);
 			break;
 
 		case 0xc:
 
 			printf("RND V%x, %x\n", x, kk);
+			RND_Vx_byte(x, kk);
 			break;
 
 		case 0xd:
@@ -182,6 +178,7 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			if (kk == 0x07) {
 
 				printf("LD V%x, DT\n", x);
+				LD_Vx_DT(x);
 			
 			} else if (kk == 0x0a) {
 
@@ -190,14 +187,17 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			} else if (kk == 0x15) {
 
 				printf("LD DT, V%x\n", x);
+				LD_DT_Vx(x);
 
 			} else if (kk == 0x18) {
 
 				printf("LD ST, V%x\n", x);
+				LD_ST_Vx(x);
 
 			} else if (kk == 0x1e) {
 
 				printf("ADD I, V%x\n", x);
+				ADD_I_Vx(x);
 
 			} else if (kk == 0x29) {
 
@@ -210,10 +210,12 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			} else if (kk == 0x55) {
 	
 				printf("LD [I], V%x\n", x);
+				LD_I_Vx(x);
 
 			} else if (kk == 0x65) {
 
 				printf("LD V%x, [I]\n", x);
+				LD_Vx_I(x);
 
 			}
 

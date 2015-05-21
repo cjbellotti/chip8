@@ -1,5 +1,5 @@
 all:
-	gcc -Wall main.c cpu.c -o main
+	gcc -Wall $(CFLAG) main.c cpu.c -o main
 clean:
 	rm main
 	rm *.h
