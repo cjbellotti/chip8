@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 #include "cpu.h"
 
@@ -10,6 +11,11 @@ void load_rom(machine_t *, char*);
 
 int main()
 {
+
+	machine_t machine;
+	reset(&machine);
+	load_rom(&machine, "./roms/PONG.ch8");
+
 	SDL_Init(SDL_INIT_EVERYTHING);
 
 	SDL_Window *wnd = SDL_CreateWindow("CHIP-8 Emulator",
@@ -20,10 +26,62 @@ int main()
 										SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	SDL_Renderer *rnd = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED);
 
+	SDL_Texture *tex = SDL_CreateTexture(rnd, SDL_PIXELFORMAT_RGBA8888,
+										SDL_TEXTUREACCESS_STREAMING,
+										64, 32);
+
+	SDL_Surface *surface = SDL_CreateRGBSurface(0, 64, 32, 32, 
+													0x00ff0000,
+													0x0000ff00,
+													0x000000ff,
+													0xff000000);
+
+
+	SDL_LockTexture(tex, NULL, &surface->pixels, &surface->pitch);
+
+	expansion(machine.screen, (Uint32*) surface->pixels);
+
+	SDL_UnlockTexture(tex);
+
+	int running = 1;
+	SDL_Event ev;
+	double last_ticks = 0;
+
+	while (running)
+	{
+
+
+		//SDL_WaitEvent(&ev);
+		while(SDL_PollEvent(&ev)) {
+				switch(ev.type)
+				{
+						case SDL_QUIT:
+								running = 0;
+								break;
+				}
+		}
+
+		if (SDL_GetTicks() - last_ticks > (1000/ 60))
+		{
+				if (machine.registers.pc >= MEMORY_SIZE)
+						machine.registers.pc = 0x200;
+				else
+				{
+						uint16_t opcode = (machine.mem[machine.registers.pc] << 8) | (machine.mem[machine.registers.pc + 2]);
+						machine.registers.pc+=2;
+						exec_opcode(&machine, opcode);
+				}
+				SDL_RenderClear(rnd);
+				SDL_RenderCopy(rnd, tex, NULL, NULL);
+				SDL_RenderPresent(rnd);
+				last_ticks = SDL_GetTicks();
+		}
+
+	}
 	// TODO : Logica
 
 	SDL_DestroyRenderer(rnd);
-	SDL_DestroyRenderer(wnd);
+	SDL_DestroyWindow(wnd);
 	SDL_Quit();
 	return 0;
 }

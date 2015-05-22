@@ -1,5 +1,5 @@
 all:
-	gcc -Wall $(CFLAG) main.c cpu.c -o main
+	gcc -Wall $(CFLAG) main.c cpu.c -o main -lSDL2 -lSDL2main
 clean:
 	rm main
-	rm *.h
+	rm *.o

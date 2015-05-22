@@ -6,16 +6,19 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <SDL2/SDL.h>
 
 #ifndef CPU_H
 #define CPU_H
 
 #define MEMORY_SIZE  4096
+#define SCREEN_SIZE 2048
 #define STACK_SIZE 16
 
 #define PUSH(data) machine->registers.sp++; machine->stack[machine->registers.sp] = data;
 #define POP(target) target = machine->stack[machine->registers.sp]; machine->registers.sp--
 
+#define CLS memset(machine->screen, 0, 2048);
 #define RET machine->registers.pc = machine->stack[machine->registers.sp]; machine->registers.sp--
 #define JP(addr) machine->registers.pc = addr
 #define CALL(addr) machine->registers.sp++; machine->stack[machine->registers.sp] = machine->registers.pc; machine->registers.pc = addr
@@ -37,7 +40,7 @@
 #define LD_I_addr(addr) machine->registers.i = addr
 #define JP_V0_addr(addr)  machine->registers.pc = machine->registers.v[0] + addr
 #define RND_Vx_byte(vx, byte) machine->registers.v[vx] = (rand() % 256) & byte
-
+#define DRW_Vx_Vy_n(x, y, n) ;
 #define LD_Vx_DT(vx) machine->registers.v[vx] = machine->registers.dt
 #define LD_DT_Vx(vx) machine->registers.dt = machine->registers.v[vx]
 #define LD_ST_Vx(vx) machine->registers.st = machine->registers.v[vx]
@@ -64,6 +67,7 @@ struct __machine_t {
 	
 	registers_t registers;
 	uint8_t mem[MEMORY_SIZE];
+	char screen[SCREEN_SIZE];
 	uint16_t stack[STACK_SIZE];
 	int running;
 	
@@ -72,5 +76,5 @@ struct __machine_t {
 typedef struct __machine_t machine_t;
 
 void exec_opcode(machine_t*, uint16_t);
-
+void expansion(char*, Uint32*);
 #endif

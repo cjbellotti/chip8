@@ -18,7 +18,8 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 
 			if (opcode == 0x00e0){
 
-				printf("CLS\n");	
+				printf("CLS\n");
+				CLS;	
 
 			} else if (opcode == 0x00ee){
 
@@ -158,6 +159,7 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 		case 0xd:
 
 			printf("DRW V%x, V%x, %x\n", x, y, n);
+			DRW_Vx_Vy_n(x, y, n);
 			break;
 
 		case 0xe:
@@ -222,4 +224,13 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			break;
 
 	}
+}
+
+void expansion (char *from, Uint32 *to) 
+{
+
+	int i = 0;
+	for (i = 0; i < 2048; i++) 
+		to[i] = (from[i]) ? -1 : 0;
+
 }
