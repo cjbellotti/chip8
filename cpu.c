@@ -2,6 +2,25 @@
 #include <stdint.h>
 #include "cpu.h"
 
+char keys [] = {
+		SDL_SCANCODE_X, // 0
+		SDL_SCANCODE_1, // 1
+		SDL_SCANCODE_2, // 2
+		SDL_SCANCODE_3, // 3
+		SDL_SCANCODE_Q, // 4
+		SDL_SCANCODE_W, // 5
+		SDL_SCANCODE_E, // 6
+		SDL_SCANCODE_A, // 7
+		SDL_SCANCODE_S, // 8
+		SDL_SCANCODE_D, // 9
+		SDL_SCANCODE_Z, // a
+		SDL_SCANCODE_C, // b
+		SDL_SCANCODE_4, // c
+		SDL_SCANCODE_R, // d
+		SDL_SCANCODE_F, // e
+		SDL_SCANCODE_V  // f
+};
+
 inline void __drw_vx_vy_n(machine_t *machine, uint8_t vx, uint8_t vy, uint8_t n)
 {
 	int x = machine->registers.v[vx] & 63;
@@ -175,6 +194,7 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			} else if (kk == 0xa1) {
 
 				printf("SKNP V%x\n", x);
+				SKNP_Vx(x);
 
 			}
 			break;
@@ -236,4 +256,10 @@ void expansion (char *from, Uint32 *to)
 	for (i = 0; i < 2048; i++) 
 		to[i] = (from[i]) ? -1 : 0;
 
+}
+int is_key_pressed(char key)
+{
+	const Uint8 *sdl_key = SDL_GetKeyboardState(NULL);
+	Uint8 real_key = keys[(int) key];
+	return sdl_key[real_key];
 }

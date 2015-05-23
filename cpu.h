@@ -41,6 +41,8 @@
 #define JP_V0_addr(addr)  machine->registers.pc = (machine->registers.v[0] + addr) & 0xfff
 #define RND_Vx_byte(vx, byte) machine->registers.v[vx] = (rand() % 256) & byte
 #define DRW_Vx_Vy_n(x, y, n) ;
+#define SKP_Vx(vx) if(is_key_pressed(machine->registers.v[vx])) machine->registers.pc += 2
+#define SKNP_Vx(vx) if(!is_key_pressed(machine->registers.v[vx])) machine->registers.pc += 2
 #define LD_Vx_DT(vx) machine->registers.v[vx] = machine->registers.dt
 #define LD_DT_Vx(vx) machine->registers.dt = machine->registers.v[vx]
 #define LD_ST_Vx(vx) machine->registers.st = machine->registers.v[vx]
@@ -77,4 +79,5 @@ typedef struct __machine_t machine_t;
 
 void exec_opcode(machine_t*, uint16_t);
 void expansion(char*, Uint32*);
+int is_key_pressed(char);
 #endif

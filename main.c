@@ -24,6 +24,8 @@ uint8_t spritesChars[] = {
 		0xf0, 0x80, 0xf0, 0x80, 0x80  // F	
 
 };
+
+
 void reset(machine_t*);
 void load_rom(machine_t *, char*);
 
