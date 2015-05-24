@@ -29,12 +29,19 @@ uint8_t spritesChars[] = {
 void reset(machine_t*);
 void load_rom(machine_t *, char*);
 
-int main()
+int main(int argc, char *argv[])
 {
+
+	if (argc < 2) {
+
+		printf ("No rom file. Usage chip8 <rom_file_name>\n");
+		return 0;
+
+	}
 
 	machine_t machine;
 	reset(&machine);
-	load_rom(&machine, "./roms/PONG.ch8");
+	load_rom(&machine, argv[1]);
 	//load_rom(&machine, "./roms/INVADERS.ch8");
 
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -107,9 +114,22 @@ int main()
 						machine.registers.pc = 0x200;
 				else
 				{
-						uint16_t opcode = (machine.mem[machine.registers.pc] << 8) | (machine.mem[machine.registers.pc + 1]);
-						machine.registers.pc+=2;
-						exec_opcode(&machine, opcode);
+						if (machine.waiting_key < 0) 
+						{
+							uint16_t opcode = (machine.mem[machine.registers.pc] << 8) | (machine.mem[machine.registers.pc + 1]);
+							machine.registers.pc+=2;
+							exec_opcode(&machine, opcode);
+						}
+						else
+						{
+							int key = 0;
+							for (key = 0x0; key <= 0xf && machine.waiting_key >= 0; key++)
+								if (is_key_pressed(key))
+								{
+									machine.registers.v[machine.waiting_key] = key;
+									machine.waiting_key = -1;
+								}
+						}
 				}
 				last_ticks_cpu = SDL_GetTicks();
 		}	
@@ -190,6 +210,7 @@ void reset(machine_t *machine) {
 	machine->registers.i = 0x0000;
 	machine->registers.st = 0x00;
 	machine->registers.dt = 0x00;
+	machine->waiting_key = -1;
 
 	memcpy(machine->mem + 0x50, spritesChars, 80);
 }

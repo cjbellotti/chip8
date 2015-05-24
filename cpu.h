@@ -44,6 +44,7 @@
 #define SKP_Vx(vx) if(is_key_pressed(machine->registers.v[vx])) machine->registers.pc += 2
 #define SKNP_Vx(vx) if(!is_key_pressed(machine->registers.v[vx])) machine->registers.pc += 2
 #define LD_Vx_DT(vx) machine->registers.v[vx] = machine->registers.dt
+#define LD_Vx_k(vx) machine->waiting_key = vx;
 #define LD_DT_Vx(vx) machine->registers.dt = machine->registers.v[vx]
 #define LD_ST_Vx(vx) machine->registers.st = machine->registers.v[vx]
 #define ADD_I_Vx(vx) machine->registers.i += machine->registers.v[vx]
@@ -72,6 +73,7 @@ struct __machine_t {
 	char screen[SCREEN_SIZE];
 	uint16_t stack[STACK_SIZE];
 	int running;
+	int waiting_key;
 	
 };
 

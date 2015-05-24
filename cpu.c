@@ -189,11 +189,10 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 
 			if (kk == 0x9e) {
 
-				printf("SKP V%x\n", x);
+				SKP_Vx(x);
 
 			} else if (kk == 0xa1) {
 
-				printf("SKNP V%x\n", x);
 				SKNP_Vx(x);
 
 			}
@@ -208,6 +207,7 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 			} else if (kk == 0x0a) {
 
 				printf("LD V%x, K\n", x);
+				LD_Vx_k(x);
 
 			} else if (kk == 0x15) {
 
@@ -227,11 +227,9 @@ void exec_opcode(machine_t *machine, uint16_t opcode)
 
 			} else if (kk == 0x33) {
 
-				printf("LD B, V%x\n", x);
 				machine->mem[machine->registers.i] = (machine->registers.v[x] / 100);
 				machine->mem[machine->registers.i + 1] = (machine->registers.v[x] / 10) % 10;
 				machine->mem[machine->registers.i + 2] = machine->registers.v[x] % 10;
-
 
 			} else if (kk == 0x55) {
 	
