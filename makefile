@@ -1,7 +1,7 @@
 all:
-	gcc -Wall $(CFLAGS) main.c cpu.c -o main -lSDL2 -lSDL2main
+	gcc -Wall $(CFLAGS) chip8emu.c cpu.c -o chip8emu -lSDL2 -lSDL2main
 	gcc $(CFLAGS) disasm.c -o disasm
 clean:
-	rm main
+	rm chip8emu 
 	rm disasm
 	rm *.o

@@ -12,7 +12,7 @@ void disasm_opcode(uint16_t opcode)
 	uint8_t y = (opcode >> 4) & 0xf;
 	uint8_t op = (opcode >> 12);
 
-	printf("%x - ", opcode);
+	printf("%4x - ", opcode);
 
 	switch (op)
 	{
@@ -28,7 +28,7 @@ void disasm_opcode(uint16_t opcode)
 
 			} else {
 
-				//printf("SYS %x\n", nnn);
+				printf("%x\n", opcode);
 
 			} 
 
@@ -60,7 +60,13 @@ void disasm_opcode(uint16_t opcode)
 
 				printf("SE V%x, V%x\n", x, y);
 
-			}	
+			}
+			else
+			{
+					
+				printf("%x\n", opcode);
+
+			}
 			break;
 
 		case 6:
@@ -111,6 +117,10 @@ void disasm_opcode(uint16_t opcode)
 
 				printf("SHL V%x\n", x);
 
+			} else {
+
+				printf("%x\n", opcode);
+
 			}
 			break;
 
@@ -119,6 +129,11 @@ void disasm_opcode(uint16_t opcode)
 			if (n == 0) {
 
 				printf("SNE V%x, V%x\n", x, y);
+
+			}
+			else
+			{
+				printf("%x\n", opcode);
 
 			}
 			break;
@@ -152,6 +167,10 @@ void disasm_opcode(uint16_t opcode)
 			} else if (kk == 0xa1) {
 
 				printf("SKNP V%x\n", x);
+
+			} else {
+
+				printf("%x\n", opcode);
 
 			}
 			break;
@@ -194,13 +213,17 @@ void disasm_opcode(uint16_t opcode)
 
 				printf("LD V%x, [I]\n", x);
 
+			} else {
+
+				printf("%x\n", opcode);
+
 			}
 
 			break;
 
 		default:
 
-			printf("%x - Unidentified\n", opcode);
+			printf("%x - Undentified\n", opcode);
 
 	}
 
@@ -213,6 +236,13 @@ int main (int argc, char *argv[])
 	{
 		printf("You must to specify rom file name.\n");
 		return 0;
+	}
+
+	int startMem = 0;
+	if (argc > 2)
+	{
+		printf("Start Memory: %x\n", atoi(argv[2]));
+		startMem = atoi(argv[2]);
 	}
 
 	uint8_t mem[4096];
@@ -237,11 +267,11 @@ int main (int argc, char *argv[])
 	fclose(file_rom);
 
 	int i = 0;
-	uint16_t pc = 0;
-	for (i = 0; i < 4096; i++)
+	uint16_t pc = startMem;
+	while(pc < 4096)
 	{
 	
-		printf("%x - ", pc);	
+		printf("%3x - ", pc);	
 		uint16_t opcode = (mem[pc] << 8) | (mem[pc + 1]);
 		pc+=2;
 		disasm_opcode(opcode);

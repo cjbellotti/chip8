@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 							for (key = 0x0; key <= 0xf && machine.waiting_key >= 0; key++)
 								if (is_key_pressed(key))
 								{
-									machine.registers.v[machine.waiting_key] = key;
+									machine.registers.v[(int)machine.waiting_key] = key;
 									machine.waiting_key = -1;
 								}
 						}

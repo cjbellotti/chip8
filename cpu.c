@@ -33,13 +33,13 @@ inline void __drw_vx_vy_n(machine_t *machine, uint8_t vx, uint8_t vy, uint8_t n)
 	machine->registers.v[0xf] = 0;
 	for (i = 0; i < n; i++) 
 	{
-		sprite = machine->mem[machine->registers.i + i];
+		sprite = machine->mem[(machine->registers.i + i) & 0xfff];
 		tmpY = y << 6;
 		tmpX = x;	
 		for (bitIndex = 0; bitIndex < 8; bitIndex++)
 		{
-			uint8_t pixel = ((sprite >> (7 - bitIndex)) & 0x1);
-			machine->registers.v[0xf] = machine->screen[tmpY + tmpX] != 0 && pixel != 0;
+			uint8_t pixel = (sprite & (1 << (7 - bitIndex))) != 0;
+			machine->registers.v[0xf] |= (machine->screen[tmpY + tmpX] & pixel);
 			machine->screen[tmpY + tmpX] ^= pixel;
 			tmpX++;
 		}

@@ -27,27 +27,27 @@
 #define SE_Vx_Vy(vx, vy) if (machine->registers.v[vx] == machine->registers.v[vy]) machine->registers.pc = (machine->registers.pc + 2) & 0xfff
 #define LD_Vx_byte(vx, byte)  machine->registers.v[vx] = byte
 #define ADD_Vx_byte(vx, byte) machine->registers.v[vx] = (machine->registers.v[vx] + byte) & 0xff
-#define LD_Vx_Vy(vx, vy) machine->registers.v[vx] = machine->registers.v[vy] & 0xff
+#define LD_Vx_Vy(vx, vy) machine->registers.v[vx] = machine->registers.v[vy] 
 #define OR_Vx_Vy(vx, vy) machine->registers.v[vx] |= machine->registers.v[vy] 
 #define AND_Vx_Vy(vx, vy) machine->registers.v[vx] &= machine->registers.v[vy]
 #define XOR_Vx_Vy(vx, vy) machine->registers.v[vx] ^= machine->registers.v[vy]
-#define ADD_Vx_Vy(vx, vy) machine->registers.v[0xf] = ((machine->registers.v[vx] + machine->registers.v[vy]) & 0x100) ? 1 : 0;  machine->registers.v[vx] += machine->registers.v[vy]
-#define SUB_Vx_Vy(vx, vy) machine->registers.v[0xf] = (machine->registers.v[vx] > machine->registers.v[vy]) ? 1 : 0; machine->registers.v[vx] = machine->registers.v[vx] - machine->registers.v[vy]
+#define ADD_Vx_Vy(vx, vy) machine->registers.v[0xf] = ((machine->registers.v[vx] + machine->registers.v[vy]) & 0x100) ? 1 : 0;  machine->registers.v[vx] = (machine->registers.v[vx] + machine->registers.v[vy]) & 0xff
+#define SUB_Vx_Vy(vx, vy) machine->registers.v[0xf] = (machine->registers.v[vx] > machine->registers.v[vy]) ? 1 : 0; machine->registers.v[vx] = (machine->registers.v[vx] - machine->registers.v[vy]) & 0xff
 #define SHR_Vx(vx) machine->registers.v[0xf] = (machine->registers.v[vx] & 0x01) ? 1: 0; machine->registers.v[vx] >>= 1 
-#define SUBN_Vx_Vy(vx, vy) machine->registers.v[0xf] = (machine->registers.v[vy] > machine->registers.v[vx]) ? 1 : 0; machine->registers.v[vx] = machine->registers.v[vy] - machine->registers.v[vx]
+#define SUBN_Vx_Vy(vx, vy) machine->registers.v[0xf] = (machine->registers.v[vy] > machine->registers.v[vx]) ? 1 : 0; machine->registers.v[vx] = (machine->registers.v[vy] - machine->registers.v[vx]) & 0xff
 #define SHL_Vx(vx) machine->registers.v[0xf] = (machine->registers.v[vx] & 0x80) ? 1 : 0; machine->registers.v[vx] <<= 1
-#define SNE_Vx_Vy(vx, vy) if (machine->registers.v[vx] != machine->registers.v[vy]) machine->registers.pc = (machine->registers.v[vx] + 2) & 0xff
+#define SNE_Vx_Vy(vx, vy) if (machine->registers.v[vx] != machine->registers.v[vy]) machine->registers.pc = (machine->registers.v[vx] + 2) & 0xfff
 #define LD_I_addr(addr) machine->registers.i = addr
 #define JP_V0_addr(addr)  machine->registers.pc = (machine->registers.v[0] + addr) & 0xfff
-#define RND_Vx_byte(vx, byte) machine->registers.v[vx] = (rand() % 256) & byte
+#define RND_Vx_byte(vx, byte) machine->registers.v[vx] = rand() & byte
 #define DRW_Vx_Vy_n(x, y, n) ;
-#define SKP_Vx(vx) if(is_key_pressed(machine->registers.v[vx])) machine->registers.pc += 2
-#define SKNP_Vx(vx) if(!is_key_pressed(machine->registers.v[vx])) machine->registers.pc += 2
+#define SKP_Vx(vx) if(is_key_pressed(machine->registers.v[vx])) machine->registers.pc = (machine->registers.pc + 2) & 0xfff
+#define SKNP_Vx(vx) if(!is_key_pressed(machine->registers.v[vx])) machine->registers.pc = (machine->registers.pc + 2) & 0xfff
 #define LD_Vx_DT(vx) machine->registers.v[vx] = machine->registers.dt
 #define LD_Vx_k(vx) machine->waiting_key = vx;
 #define LD_DT_Vx(vx) machine->registers.dt = machine->registers.v[vx]
 #define LD_ST_Vx(vx) machine->registers.st = machine->registers.v[vx]
-#define ADD_I_Vx(vx) machine->registers.i += machine->registers.v[vx]
+#define ADD_I_Vx(vx) machine->registers.i += machine->registers.v[vx]; machine->registers.i &= 0xfff
 #define LD_F_Vx(vx) machine->registers.i = 0x50 + machine->registers.v[vx & 0xf]*5
 #define LD_I_Vx(vx) memcpy(machine->mem + machine->registers.i, machine->registers.v, vx +1) 
 #define LD_Vx_I(vx) memcpy(machine->registers.v, machine->mem + machine->registers.i, vx +1) 
